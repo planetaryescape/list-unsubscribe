@@ -7,6 +7,13 @@
 Parse `List-Unsubscribe` (RFC 2369) and `List-Unsubscribe-Post` (RFC 8058)
 email headers into a typed action enum.
 
+## Install
+
+```toml
+[dependencies]
+list-unsubscribe = "0.1"
+```
+
 ```rust
 use list_unsubscribe::{parse_with_post, UnsubscribeMethod};
 
@@ -58,7 +65,7 @@ typed action enum, then leave execution to the caller.
 ## What it does not do
 
 - It does **not** POST to the one-click endpoint. The caller picks an
-  HTTP client (`reqwest`, `ureq`, whatever) and executes the action.
+  HTTP client such as `reqwest` or `ureq` and executes the action.
 - It does **not** send the unsubscribe mail. The caller hands the
   `Mailto` variant to a mail composer.
 - It does **not** scrape unsubscribe links from the message body. That
@@ -84,8 +91,8 @@ typed action enum, then leave execution to the caller.
 The full coverage matrix lives in
 [`testdata/coverage.md`](./testdata/coverage.md). Each fixture is a
 language-neutral JSON file under
-[`testdata/conformance/`](./testdata/conformance/) so a future
-TypeScript or other-language port can load the same corpus.
+[`testdata/conformance/`](./testdata/conformance/) so another
+implementation can load the same corpus.
 
 Three tests enforce the integrity of the corpus:
 
@@ -109,8 +116,8 @@ than the spec.
   tends to be faster for power users; clients that want the opposite
   preference can pattern-match on the returned enum.
 - **`?body=` dropped from `mailto:` URIs.** Including it would let
-  clients silently send pre-canned text on the user's behalf, which is
-  a UX and safety footgun.
+  clients prepare message text on the user's behalf. This crate returns
+  only the address and optional subject.
 - **Multiple URLs of the same scheme: first wins.** RFC 2369 does not
   specify ordering; this gives callers a deterministic single choice.
 
@@ -123,13 +130,15 @@ than the spec.
   messages.
 
 The default feature set is empty. The crate has one required dependency
-(`url`) and no transitive runtime cost beyond that.
+(`url`).
 
-## Companion direction
+## Out of Scope
 
-A future v2 could add executor features (`reqwest`-backed
-`oneclick.unsubscribe()`, `lettre`-backed `mailto.send()`) but v1 is
-deliberately parse-only. If you want them, open an issue.
+Execution helpers are intentionally outside this crate's current
+surface. Callers choose the HTTP client for one-click unsubscribe and
+the mail composer or SMTP client for `mailto:` actions.
+
+Request executor support with a concrete client or runtime use case.
 
 ## Maintenance
 
