@@ -38,13 +38,13 @@ One of them is mandatory RFC 8058 one-click unsubscribe for senders above
 to "required for inbox placement", and elevated the audience for clients
 that honour it.
 
-Every Rust project that wants to act on `List-Unsubscribe` — mail readers,
-mailing-list compliance tools, deliverability auditors, spam filters using
-header presence as a positive signal — re-implements the parsing logic.
-`mail-parser` and `mailparse` expose the raw header but no typed action
-enum, no RFC 8058 awareness, no `mailto:` query parsing.
+`List-Unsubscribe` describes an action, not just a header value.
+Callers still need to choose between mailto, web-link, and RFC 8058
+one-click actions, while handling `mailto:` query parameters
+consistently.
 
-This crate fills that gap, and nothing more.
+This crate keeps that policy surface small: parse the headers into a
+typed action enum, then leave execution to the caller.
 
 ## What it does
 
