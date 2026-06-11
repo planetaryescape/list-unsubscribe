@@ -1,6 +1,6 @@
 [package]
 name = "list-unsubscribe"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 rust-version = "1.74"
@@ -42,7 +42,7 @@ mail-parser = ["dep:mail-parser"]
 [dependencies]
 url = "2"
 serde = { version = "1", features = ["derive"], optional = true }
-mail-parser = { version = "0.9", optional = true }
+mail-parser = { version = ">=0.9, <0.12", optional = true }
 
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }
